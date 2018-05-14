@@ -7,10 +7,9 @@
  * @version: 1.0.0
  */
 
-var Promise = require('bluebird'),
+const Promise = require('bluebird'),
     StorageBase = require('ghost-storage-base'),
     drive = require('googleapis').drive('v3'),
-    common = require('../../../../core/server/lib/common'),
     { auth, get, upload } = require('./components');
 
 class ghostGoogleDrive extends StorageBase {
