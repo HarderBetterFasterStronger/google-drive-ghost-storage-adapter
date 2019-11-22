@@ -5,14 +5,14 @@
  * @param client the authentication client
  */
 
-const google = require('googleapis');
+const { google } = require("googleapis");
 
 module.exports = config => {
   var jwtClient = new google.auth.JWT(
     config.key.client_email,
     null,
     config.key.private_key,
-    ['https://www.googleapis.com/auth/drive'],
+    ["https://www.googleapis.com/auth/drive"],
     null
   );
 
@@ -25,4 +25,4 @@ module.exports = config => {
       resolve(jwtClient);
     });
   });
-}
+};

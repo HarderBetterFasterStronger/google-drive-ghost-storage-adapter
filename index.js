@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 /**
  * Google Drive storage adapter for Ghost
  *
@@ -7,16 +7,15 @@
  * @version: 1.0.0
  */
 
-const Promise = require('bluebird'),
-    StorageBase = require('ghost-storage-base'),
-    drive = require('googleapis').drive('v3'),
-    { auth, get, upload } = require('./components');
-
+const Promise = require("bluebird"),
+  StorageBase = require("ghost-storage-base"),
+  { google } = require("googleapis"),
+  { auth, get, upload } = require("./components");
+const drive = google.drive({ version: "v3" });
 class ghostGoogleDrive extends StorageBase {
-
   constructor(config) {
     super();
-    this.config = config
+    this.config = config;
   }
 
   /**
@@ -30,27 +29,24 @@ class ghostGoogleDrive extends StorageBase {
    */
   save(file, targetDir) {
     return new Promise((resolve, reject) => {
-      auth(this.config)
-        .then(client => {
-          upload(client, file)
-            .then(data => {
-              resolve('/content/images/' + data.id + '.' + data.fileExtension);
-            });
+      auth(this.config).then(client => {
+        upload(client, file).then(data => {
+          resolve("/content/images/" + data.id + "." + data.fileExtension);
         });
+      });
     });
   }
 
   exists(fileName, targetDir) {
     return new Promise((resolve, reject) => {
-      auth(this.config)
-        .then(client => {
-          get(client, fileName, (error, response) => {
-            if (error) {
-              reject(false);
-            }
+      auth(this.config).then(client => {
+        get(client, fileName, (error, response) => {
+          if (error) {
+            reject(false);
+          }
 
-            resolve(true);
-          })
+          resolve(true);
+        });
       });
     });
   }
@@ -67,38 +63,38 @@ class ghostGoogleDrive extends StorageBase {
 
     return function serveStaticContent(req, res, next) {
       // get the file id from url
-      var id = req.path.replace('/', '').split('.')[0];
+      var id = req.path.replace("/", "").split(".")[0];
 
-      _this.exists(id)
+      _this
+        .exists(id)
         .then(() => {
-          auth(_this.config)
-            .then(client => {
-              var get = drive.files.get({
-                auth: client,
-                fileId: id,
-                alt: 'media'
-              });
-
-              var headers = get.headers;
-              headers['content-disposition'] = "attachment";
-              headers['cache-control'] = 'public, max-age=1209600';
-              res.writeHead(200, headers);
-              get.pipe(res);
+          auth(_this.config).then(client => {
+            var get = drive.files.get({
+              auth: client,
+              fileId: id,
+              alt: "media"
             });
+
+            var headers = get.headers;
+            headers["content-disposition"] = "attachment";
+            headers["cache-control"] = "public, max-age=1209600";
+            res.writeHead(200, headers);
+            get.pipe(res);
+          });
         })
         .catch(() => {
           next();
         });
-    }
+    };
   }
 
   /**
    * Not implemented.
    * @returns {Promise.<*>}
    */
-   delete() {
-     return Promise.reject('not implemented');
-   }
+  delete() {
+    return Promise.reject("not implemented");
+  }
 
   /**
    * Reads bytes from disk for a target image
@@ -107,19 +103,18 @@ class ghostGoogleDrive extends StorageBase {
    * @param options
    */
   read(options) {
-    var fileId = options.path.replace('/', '').split('.')[0];
+    var fileId = options.path.replace("/", "").split(".")[0];
 
     return new Promise((resolve, reject) => {
-      auth(this.config)
-        .then(client => {
-          get(client, fileId, (error, response) => {
-            if (error) {
-              reject(error);
-            }
+      auth(this.config).then(client => {
+        get(client, fileId, (error, response) => {
+          if (error) {
+            reject(error);
+          }
 
-            resolve(response);
-          });
+          resolve(response);
         });
+      });
     });
   }
 }

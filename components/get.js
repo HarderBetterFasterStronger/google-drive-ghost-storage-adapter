@@ -6,14 +6,17 @@
  * @param callback function to call with error and response
  */
 
-const  drive = require('googleapis').drive('v3');
-
+const { google } = require("googleapis");
+const drive = google.drive({ version: "v3" });
 module.exports = (client, fileId, callback) => {
-  drive.files.get({
-    auth: client,
-    fileId: fileId,
-    alt: 'media'
-  }, (error, response) => {
-    callback(error, response);
-  });
-}
+  drive.files.get(
+    {
+      auth: client,
+      fileId: fileId,
+      alt: "media"
+    },
+    (error, response) => {
+      callback(error, response);
+    }
+  );
+};
