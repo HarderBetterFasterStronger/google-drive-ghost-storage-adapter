@@ -15,16 +15,16 @@ To install this storage adapter, go through the following steps:
 - Clone this repo to `/storage`
   ```
   cd [path/to/ghost]/content/adapters/storage
-  git clone https://github.com/glur4k/google-drive-ghost-storage-adapter.git
+  git clone https://github.com/shreegowtham27/google-drive-ghost-storage-adapter.git
   ```
 
 - Install dependencies
   ```
-  cd ghost-google-drive
+  cd google-drive-ghost-storage-adapter
   npm install
   ```
 
-- Create Google service account and copy your credentials (for example, see [https://github.com/robincsamuel/ghost-google-drive#create-oauth-credentials](Robin C Samuel's repo) - credits to him)
+- Create Google service account and copy your credentials (for example, [see](https://github.com/robincsamuel/ghost-google-drive#create-oauth-credentials)(Robin C Samuel's repo) - credits to him)
 
 [Optional] If you want to upload the files to a shared Google Drive folder you can follow these instructions:
 - Open the `settings.json` in `/content/adapters/storage/google-drive-ghost-storage-adapter`
